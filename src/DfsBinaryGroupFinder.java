@@ -72,9 +72,17 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
                 if (image[r][c] == 1 && !visited[r][c]) {
                     int[] data = new int[3];
                     dfs(image, visited, r, c, data);
+
+                    int size = data[0];
+                    int x = data[1] / size;
+                    int y = data[2] / size;
+
+                    groups.add(new Group(size, new Coordinate(x, y)));
                 }
             }
         }
+
+        groups.sort((a, b) -> b.compareTo(a));
 
         return groups;
     }
