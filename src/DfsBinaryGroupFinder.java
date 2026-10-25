@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 
 public class DfsBinaryGroupFinder implements BinaryGroupFinder {
    /**
@@ -62,7 +63,41 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
             }
         }
 
-        return null;
+        List<Group> groups = new ArrayList<>();
+        boolean[][] visited = new boolean[rows][cols];
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+
+                if (image[r][c] == 1 && !visited[r][c]) {
+                    int[] data = new int[3];
+                    dfs(image, visited, r, c, data);
+                }
+            }
+        }
+
+        return groups;
+    }
+
+    private void dfs(int[][] image, boolean[][] visited,
+                 int r, int c, int[] data) {
+
+        if (r < 0 || r >= image.length ||
+            c < 0 || c >= image[0].length ||
+            visited[r][c] || image[r][c] == 0) {
+            return;
+        }
+
+        visited[r][c] = true;
+
+        data[0]++;
+        data[1] += c;
+        data[2] += r;
+
+        dfs(image, visited, r - 1, c, data);
+        dfs(image, visited, r + 1, c, data);
+        dfs(image, visited, r, c - 1, data);
+        dfs(image, visited, r, c + 1, data);
     }
     
 }
