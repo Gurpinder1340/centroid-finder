@@ -6,5 +6,8 @@ What the code does:
 - Takes image path and target color.
 - Provides three arguments
 - Loads the image:UsesinputImage = ImageIO.read(new File(inputImagePath));
-- black and white image: Uses code: DistanceImageBinarizer to turn the image black and white. 
-
+- black and white image: Uses code: DistanceImageBinarizer to turn the image black and white.
+ 
+ EuclideanColorDistance: 
+ - Calculates the difference between two colors by comparing their red,green, and blue (rgb) values
+ 
