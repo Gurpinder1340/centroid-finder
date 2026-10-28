@@ -13,6 +13,8 @@ For this wave, please have each partner make a commit below with their username 
 
 "I, YOUR_GITHUB_USERNAME, understand that AI is ONLY to be used for tests, and that every commit that I use AI for must start with 'AI Used'"  
 "I, Gurpinder1340 understand that AI is ONLY to be used for tests, and that every commit that I use AI for must start with 'AI Used'" 
+"centroid finder video part 1"
+
 "I, Kiyum06, understand that AI is ONLY to be used for tests, and that every commit that I use AI for must start with 'AI Used'"
 
 ## Wave 1: Understand
