@@ -10,6 +10,7 @@
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+    <exec.mainClass>ImageSummaryApp</exec.mainClass>
   </properties>
 
   <dependencies>
@@ -35,6 +36,14 @@
       <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- JavaCV for MP4 video processing -->
+    <dependency>
+        <groupId>org.bytedeco</groupId>
+        <artifactId>javacv-platform</artifactId>
+        <version>1.5.12</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -51,7 +60,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
-          <mainClass>ImageSummaryApp</mainClass>
+            <mainClass>${exec.mainClass}</mainClass>
         </configuration>
       </plugin>
     </plugins>
