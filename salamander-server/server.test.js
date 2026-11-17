@@ -84,4 +84,27 @@ describe("Salamander API", () => {
     });
 
 
+    test("POST /process should reject missing parameters", async () => {
+        const response = await request(app)
+            .post("/process/test.mp4")
+            .send({});
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe(
+            "Target color and threshold are required"
+        );
+    });
+
+    test("POST /process should return 404 for missing video", async () => {
+        const response = await request(app)
+            .post("/process/missing.mp4")
+            .send({
+                targetColor: "FF0000",
+                threshold: 50
+            });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toBe("Video not found");
+    });
+
 });
