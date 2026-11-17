@@ -34,4 +34,41 @@ describe("Salamander API", () => {
         expect(response.headers["content-type"]).toContain("image/jpeg");
     });
 
+    test("POST /process should complete a video processing job", async () => {
+        const response = await request(app)
+            .post("/process/test.mp4")
+            .send({
+                targetColor: "FF0000",
+                threshold: 50
+            });
+
+        expect(response.statusCode).toBe(202);
+        expect(response.body).toHaveProperty("jobId");
+        expect(response.body.status).toBe("running");
+
+        const jobId = response.body.jobId;
+        let status = "running";
+
+        // Wait for Java processing to finish
+        for (let i = 0; i < 30 && status === "running"; i++) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const statusResponse = await request(app)
+                .get(`/process/${jobId}/status`);
+
+            expect(statusResponse.statusCode).toBe(200);
+            status = statusResponse.body.status;
+        }
+
+        expect(status).toBe("completed");
+    }, 20000);
+
+    test("GET /process/:jobId/status should return 404 for unknown job", async () => {
+        const response = await request(app)
+            .get("/process/unknown-job-id/status");
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toBe("Job not found");
+    });
+
 });

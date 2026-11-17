@@ -2,11 +2,15 @@ const express = require("express");
 const { execFile } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { randomUUID } = require("crypto");
+
+
 require("dotenv").config(); 
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const jobs = new Map();
 
 app.use(express.json());
 
@@ -57,7 +61,100 @@ app.get("/thumbnail/:filename", (req, res) => {
 });
 
 
+app.post("/process/:filename", (req, res) => {
+    const filename = req.params.filename;
+    const { targetColor, threshold } = req.body;
 
+    // Check that the video filename is valid
+    if (path.basename(filename) !== filename) {
+        return res.status(400).json({ error: "Invalid filename" });
+    }
+
+    // Check that the video exists
+    const videoPath = path.join(__dirname, "videos", filename);
+
+    if (!fs.existsSync(videoPath)) {
+        return res.status(404).json({ error: "Video not found" });
+    }
+
+    // Check that processing options were provided
+    if (targetColor === undefined || threshold === undefined) {
+        return res.status(400).json({
+            error: "Target color and threshold are required"
+        });
+    }
+
+    // Create a unique job ID
+    const jobId = randomUUID();
+
+    // Set the output CSV file path
+    const outputCsv = path.join(__dirname, "results", `${jobId}.csv`);
+
+    // Set the Java JAR file path
+    const jarPath = path.join(__dirname, "..", "target", "videoprocessor.jar");
+
+    // Save the job information
+    jobs.set(jobId, {
+        status: "running",
+        filename: filename
+    });
+
+    // Start the Java video processor
+    execFile("java", [
+        "-jar",
+        jarPath,
+        videoPath,
+        outputCsv,
+        targetColor,
+        String(threshold)
+    ], (error) => {
+        if (error) {
+            console.error("Video processing error:", error);
+
+            jobs.set(jobId, {
+                status: "failed",
+                filename: filename
+            });
+
+            return;
+        }
+
+        jobs.set(jobId, {
+            status: "completed",
+            filename: filename,
+            outputCsv: outputCsv
+        });
+    });
+
+    // Respond without waiting for processing to finish
+    res.status(202).json({
+        jobId: jobId,
+        status: "running"
+    });
+
+});
+
+
+app.get("/process/:jobId/status", (req, res) => {
+    const jobId = req.params.jobId;
+
+    // Find the job using its ID
+    const job = jobs.get(jobId);
+
+    // Return 404 if the job does not exist
+    if (!job) {
+        return res.status(404).json({
+            error: "Job not found"
+        });
+    }
+
+    // Return the current job information
+    res.json({
+        jobId: jobId,
+        status: job.status,
+        filename: job.filename
+    });
+});
 
 if (require.main === module) {
     app.listen(PORT, () => {
