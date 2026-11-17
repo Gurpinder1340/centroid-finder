@@ -19,6 +19,11 @@ describe("Salamander API", () => {
         expect(response.body.videos).toContain("test.mp4");
     });
 
-    
+    test("GET /thumbnail should return 404 for missing video", async () => {
+        const response = await request(app).get("/thumbnail/missing.mp4");
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toBe("Video not found");
+    });
 
 });
