@@ -84,6 +84,23 @@ app.post("/process/:filename", (req, res) => {
         });
     }
 
+    // Validate target color (6 hexadecimal characters)
+    if (typeof targetColor !== "string" ||
+        !/^[0-9A-Fa-f]{6}$/.test(targetColor)) {
+        return res.status(400).json({
+            error: "Invalid target color"
+        });
+    }
+
+    // Validate threshold
+    if (typeof threshold !== "number" ||
+        !Number.isFinite(threshold) ||
+        threshold < 0) {
+        return res.status(400).json({
+            error: "Invalid threshold"
+        });
+    }
+
     // Create a unique job ID
     const jobId = randomUUID();
 

@@ -71,4 +71,17 @@ describe("Salamander API", () => {
         expect(response.body.error).toBe("Job not found");
     });
 
+
+    test("POST /process should reject invalid color and threshold", async () => {
+        const response = await request(app)
+            .post("/process/test.mp4")
+            .send({
+                targetColor: "NOTACOLOR",
+                threshold: -10
+            });
+
+        expect(response.statusCode).toBe(400);
+    });
+
+
 });
