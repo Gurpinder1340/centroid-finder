@@ -26,4 +26,12 @@ describe("Salamander API", () => {
         expect(response.body.error).toBe("Video not found");
     });
 
+
+    test("GET /thumbnail should create a thumbnail for a valid video", async () => {
+        const response = await request(app).get("/thumbnail/test.mp4");
+
+        expect(response.statusCode).toBe(200);
+        expect(response.headers["content-type"]).toContain("image/jpeg");
+    });
+
 });
