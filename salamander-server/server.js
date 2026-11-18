@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 const jobs = new Map();
 
 app.use(express.json());
+app.use("/results", express.static(path.join(__dirname, "results")));
 
 app.get("/", (req, res) => {
     res.send("Salamander Video Server is running!");
@@ -169,7 +170,10 @@ app.get("/process/:jobId/status", (req, res) => {
     res.json({
         jobId: jobId,
         status: job.status,
-        filename: job.filename
+        filename: job.filename,
+        result: job.status === "completed"
+            ? `/results/${jobId}.csv`
+            : null
     });
 });
 

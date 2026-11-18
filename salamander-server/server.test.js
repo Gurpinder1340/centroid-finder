@@ -107,4 +107,30 @@ describe("Salamander API", () => {
         expect(response.body.error).toBe("Video not found");
     });
 
+
+    
+    test("GET /results should return a CSV file", async () => {
+        const fs = require("fs");
+        const path = require("path");
+
+        const resultsFolder = path.join(__dirname, "results");
+        const testFile = path.join(resultsFolder, "test-result.csv");
+
+        fs.mkdirSync(resultsFolder, { recursive: true });
+        fs.writeFileSync(testFile, "frame,x,y\n1,100,200");
+
+        try {
+            const response = await request(app)
+                .get("/results/test-result.csv");
+
+            expect(response.statusCode).toBe(200);
+            expect(response.headers["content-type"]).toContain("text/csv");
+            expect(response.text).toContain("1,100,200");
+        } finally {
+            fs.unlinkSync(testFile);
+        }
+    });
+
+
+
 });
