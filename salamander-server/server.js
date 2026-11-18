@@ -3,6 +3,7 @@ const { execFile } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { randomUUID } = require("crypto");
+const { isValidColor, isValidThreshold } = require("./validation");
 
 
 require("dotenv").config(); 
@@ -88,17 +89,14 @@ app.post("/process/:filename", (req, res) => {
     }
 
     // Validate target color (6 hexadecimal characters)
-    if (typeof targetColor !== "string" ||
-        !/^[0-9A-Fa-f]{6}$/.test(targetColor)) {
+    if (!isValidColor(targetColor)) {
         return res.status(400).json({
             error: "Invalid target color"
         });
     }
 
     // Validate threshold
-    if (typeof threshold !== "number" ||
-        !Number.isFinite(threshold) ||
-        threshold < 0) {
+    if (!isValidThreshold(threshold)) {
         return res.status(400).json({
             error: "Invalid threshold"
         });
