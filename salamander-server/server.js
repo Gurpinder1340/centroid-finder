@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/videos", (req, res) => {
-    const videosFolder = path.join(__dirname, "videos");
+    const videosFolder = process.env.VIDEOS_DIR || path.join(__dirname, "videos");
 
     fs.readdir(videosFolder, (error, files) => {
         if (error) {
@@ -39,7 +39,8 @@ app.get("/thumbnail/:filename", (req, res) => {
         return res.status(400).json({ error: "Invalid filename" });
     }
 
-    const videoPath = path.join(__dirname, "videos", filename);
+    const videosFolder = process.env.VIDEOS_DIR || path.join(__dirname, "videos");
+    const videoPath = path.join(videosFolder, filename);
     const thumbnailPath = path.join(__dirname, "results", filename + ".jpg");
 
     if (!fs.existsSync(videoPath)) {
@@ -72,7 +73,8 @@ app.post("/process/:filename", (req, res) => {
     }
 
     // Check that the video exists
-    const videoPath = path.join(__dirname, "videos", filename);
+    const videosFolder = process.env.VIDEOS_DIR || path.join(__dirname, "videos");
+    const videoPath = path.join(videosFolder, filename);
 
     if (!fs.existsSync(videoPath)) {
         return res.status(404).json({ error: "Video not found" });
@@ -109,7 +111,7 @@ app.post("/process/:filename", (req, res) => {
     const outputCsv = path.join(__dirname, "results", `${jobId}.csv`);
 
     // Set the Java JAR file path
-    const jarPath = path.join(__dirname, "..", "target", "videoprocessor.jar");
+    const jarPath = process.env.JAR_PATH || path.join(__dirname, "..", "target", "videoprocessor.jar");
 
     // Save the job information
     jobs.set(jobId, {
