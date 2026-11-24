@@ -55,17 +55,17 @@ public class DistanceImageBinarizer implements ImageBinarizer {
 
                 int color = image.getRGB(col, row) & 0x00FFFFFF;
 
-                double distance = distanceFinder.distance(color, targetColor);
-
-                if (distance < threshold) {
-                    binary[row][col] = 1;
-                } else {
-                    binary[row][col] = 0;
-                }
+               binary[row][col] = isWithinThreshold(color) ? 1 : 0;
             }
+            
         }
 
         return binary;
+    }
+
+    private boolean isWithinThreshold(int color) {
+        double distance = distanceFinder.distance(color, targetColor);
+        return distance < threshold;
     }
 
     /**
