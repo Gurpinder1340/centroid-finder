@@ -42,12 +42,9 @@ public class ImageSummaryApp {
             return;
         }
         
-        BufferedImage inputImage = null;
-        try {
-            inputImage = ImageIO.read(new File(inputImagePath));
-        } catch (Exception e) {
-            System.err.println("Error loading image: " + inputImagePath);
-            e.printStackTrace();
+        BufferedImage inputImage = loadImage(inputImagePath);
+
+        if (inputImage == null) {
             return;
         }
         
@@ -112,6 +109,17 @@ public class ImageSummaryApp {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             System.err.println("Threshold must be an integer.");
+            return null;
+        }
+    }
+
+
+    private static BufferedImage loadImage(String inputImagePath) {
+        try {
+            return ImageIO.read(new File(inputImagePath));
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + inputImagePath);
+            e.printStackTrace();
             return null;
         }
     }
