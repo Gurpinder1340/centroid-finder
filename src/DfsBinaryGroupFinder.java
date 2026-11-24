@@ -1,6 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
 
+
+/**
+ * Finds connected groups of pixels in a binary image using
+ * recursive depth-first search (DFS).
+ *
+ * Calculates the size and centroid of each connected group
+ * and returns the groups in descending order.
+ */
 public class DfsBinaryGroupFinder implements BinaryGroupFinder {
    /**
     * Finds connected pixel groups of 1s in an integer array representing a binary image.
@@ -70,6 +78,7 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
             for (int c = 0; c < cols; c++) {
 
                 if (image[r][c] == 1 && !visited[r][c]) {
+                    // Stores group size, total x coordinates, and total y coordinates.
                     int[] data = new int[3];
                     dfs(image, visited, r, c, data);
 
@@ -87,6 +96,18 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
         return groups;
     }
 
+
+    /**
+     * Recursively explores connected white pixels and collects
+     * information needed to calculate the group's centroid.
+     *
+     * @param image the binary image containing zeros and ones
+     * @param visited tracks pixels that have already been visited
+     * @param r the current row
+     * @param c the current column
+     * @param data stores the pixel count, sum of x coordinates,
+     *             and sum of y coordinates
+     */
     private void dfs(int[][] image, boolean[][] visited,
                  int r, int c, int[] data) {
 
@@ -96,12 +117,14 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
             return;
         }
 
+        // Mark the pixel as visited to prevent counting it again.
         visited[r][c] = true;
 
         data[0]++;
         data[1] += c;
         data[2] += r;
 
+        // Explore neighboring pixels in all four directions.
         dfs(image, visited, r - 1, c, data);
         dfs(image, visited, r + 1, c, data);
         dfs(image, visited, r, c - 1, data);
