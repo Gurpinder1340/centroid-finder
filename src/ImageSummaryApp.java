@@ -30,8 +30,7 @@ import javax.imageio.ImageIO;
  */
 public class ImageSummaryApp {
     public static void main(String[] args) {
-        if (args.length < 3) {
-            System.out.println("Usage: java ImageSummaryApp <input_image> <hex_target_color> <threshold>");
+        if (!validateArguments(args)) {
             return;
         }
         
@@ -99,4 +98,15 @@ public class ImageSummaryApp {
             e.printStackTrace();
         }
     }
-}
+
+    private static boolean validateArguments(String[] args) {
+        if (args.length < 3) {
+            System.out.println("Usage: java ImageSummaryApp <input_image> <hex_target_color> <threshold>");
+            return false;
+        }
+
+        return true;
+    }
+
+} 
+
