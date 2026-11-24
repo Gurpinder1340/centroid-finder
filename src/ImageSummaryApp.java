@@ -36,11 +36,9 @@ public class ImageSummaryApp {
         
         String inputImagePath = args[0];
         String hexTargetColor = args[1];
-        int threshold = 0;
-        try {
-            threshold = Integer.parseInt(args[2]);
-        } catch (NumberFormatException e) {
-            System.err.println("Threshold must be an integer.");
+        Integer threshold = parseThreshold(args[2]);
+
+        if (threshold == null) {
             return;
         }
         
@@ -106,6 +104,16 @@ public class ImageSummaryApp {
         }
 
         return true;
+    }
+
+
+    private static Integer parseThreshold(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            System.err.println("Threshold must be an integer.");
+            return null;
+        }
     }
 
 } 
