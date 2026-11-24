@@ -19,4 +19,19 @@ public class DfsBinaryGroupFinderTest {
 
         assertTrue(groups.isEmpty());
     }
+
+    @Test
+    void testSingleGroup() {
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        int[][] image = {
+            {1, 1, 0},
+            {1, 1, 0},
+            {0, 0, 0}
+        };
+
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        assertEquals(1, groups.size());
+    }
 }
