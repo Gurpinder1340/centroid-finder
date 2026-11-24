@@ -120,4 +120,25 @@ public class DistanceImageBinarizerTest {
         assertEquals(0xFFFFFF, result.getRGB(2, 0) & 0x00FFFFFF);
         assertEquals(0x000000, result.getRGB(2, 1) & 0x00FFFFFF);
     }
+
+// Tests if a single-pixel image is converted correctly.
+@Test
+void testSinglePixelImage() {
+    ColorDistanceFinder finder = (a, b) -> Math.abs(a - b);
+
+    DistanceImageBinarizer binarizer =
+        new DistanceImageBinarizer(finder, 0x000000, 10);
+
+    BufferedImage image =
+        new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+
+    image.setRGB(0, 0, 0x000005);
+
+    int[][] result = binarizer.toBinaryArray(image);
+
+    assertEquals(1, result.length);
+    assertEquals(1, result[0].length);
+    assertEquals(1, result[0][0]);
+}
+
 }
