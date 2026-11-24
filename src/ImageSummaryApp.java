@@ -83,15 +83,7 @@ public class ImageSummaryApp {
         List<Group> groups = groupFinder.findConnectedGroups(inputImage);
         
         // Write the groups information to a CSV file "groups.csv".
-        try (PrintWriter writer = new PrintWriter("groups.csv")) {
-            for (Group group : groups) {
-                writer.println(group.toCsvRow());
-            }
-            System.out.println("Groups summary saved as groups.csv");
-        } catch (Exception e) {
-            System.err.println("Error writing groups.csv");
-            e.printStackTrace();
-        }
+        writeGroupsCsv(groups);
     }
 
     private static boolean validateArguments(String[] args) {
@@ -121,6 +113,18 @@ public class ImageSummaryApp {
             System.err.println("Error loading image: " + inputImagePath);
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static void writeGroupsCsv(List<Group> groups) {
+        try (PrintWriter writer = new PrintWriter("groups.csv")) {
+            for (Group group : groups) {
+                writer.println(group.toCsvRow());
+            }
+            System.out.println("Groups summary saved as groups.csv");
+        } catch (Exception e) {
+            System.err.println("Error writing groups.csv");
+            e.printStackTrace();
         }
     }
 
